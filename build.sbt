@@ -5,6 +5,9 @@ lazy val supportedScalaVersions = List(scala2_13, scala3)
 ThisBuild / scalaVersion       := scala3
 ThisBuild / crossScalaVersions := supportedScalaVersions
 
+// sbt-github-actions
+ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("17"), JavaSpec.temurin("11"))
+
 lazy val root = (project in file("."))
   .aggregate(`scalatest-otel-reporter`)
   .settings(
