@@ -15,6 +15,14 @@ ThisBuild / developers := List(
 // sbt-github-actions
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("17"), JavaSpec.temurin("11"))
 ThisBuild / githubWorkflowTargetTags ++= Seq("v*")
+ThisBuild / githubWorkflowBuild := Seq(
+  WorkflowStep.Sbt(List("scalafmtCheck", "scalafmtSbtCheck", "test"), name = Some("Run tests")),
+  WorkflowStep.Use(
+    UseRef.Public("mikepenz", "action-junit-report", "v4"),
+    Map("report_paths" -> "target/test-reports/TEST-*.xml"),
+    name = Some("Publish test reports"),
+  ),
+)
 ThisBuild / githubWorkflowPublishTargetBranches := Seq(
   RefPredicate.StartsWith(Ref.Tag("v")),
   RefPredicate.Equals(Ref.Branch("main")),
@@ -36,6 +44,7 @@ lazy val root = (project in file("."))
   .aggregate(`scalatest-otel-reporter`)
   .settings(
     publish / skip := true,
+    Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-reports"),
   )
 
 lazy val `scalatest-otel-reporter` = (project in file("scalatest-otel-reporter"))

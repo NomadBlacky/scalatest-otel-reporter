@@ -51,8 +51,13 @@ jobs:
       - name: Check that workflows are up to date
         run: sbt '++ ${{ matrix.scala }}' githubWorkflowCheck
 
-      - name: Build project
-        run: sbt '++ ${{ matrix.scala }}' test
+      - name: Run tests
+        run: sbt '++ ${{ matrix.scala }}' scalafmtCheck scalafmtSbtCheck test
+
+      - name: Publish test reports
+        uses: mikepenz/action-junit-report@v4
+        with:
+          report_paths: target/test-reports/TEST-*.xml
 
       - name: Compress target directories
         run: tar cf targets.tar target scalatest-otel-reporter/target project/target
