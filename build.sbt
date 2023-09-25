@@ -35,7 +35,7 @@ ThisBuild / githubWorkflowPublish := Seq(
 )
 
 lazy val root = (project in file("."))
-  .aggregate(`scalatest-otel-reporter`)
+  .aggregate(`scalatest-otel-reporter`, `example-manual-configuration`)
   .settings(
     publish / skip := true,
   )
@@ -47,5 +47,20 @@ lazy val `scalatest-otel-reporter` = (project in file("scalatest-otel-reporter")
       otelSdk   % Provided,
     ),
   )
+
+lazy val `example-manual-configuration` = (project in file("examples/manual-configuration"))
+  .dependsOn(`scalatest-otel-reporter`)
+  .settings(
+    publish / skip := true,
+    libraryDependencies ++= Seq(
+      scalatest        % Test,
+      otelSdk          % Test,
+      otelExporterOTLP % Test,
+      otelSemConv      % Test,
+    ),
+    Test / testOptions += Tests.Argument(
+      TestFrameworks.ScalaTest,
+      "-C",
+      "dev.nomadblacky.scalatest_otel_reporter.examples.JaegerTestReporter",
     ),
   )
