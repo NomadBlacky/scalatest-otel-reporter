@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   private val v = new {
-    val otel = "1.30.1"
+    val otel = "1.31.0"
   }
 
   // scalatest
