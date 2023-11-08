@@ -6,7 +6,7 @@ object Dependencies {
   }
 
   // scalatest
-  val scalatest = "org.scalatest" %% "scalatest" % "3.2.16"
+  val scalatest = "org.scalatest" %% "scalatest" % "3.2.17"
 
   // OpenTelemetry
   val otelSdk           = "io.opentelemetry"         % "opentelemetry-sdk"                         % v.otel
