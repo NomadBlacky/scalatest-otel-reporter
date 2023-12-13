@@ -33,6 +33,12 @@ ThisBuild / githubWorkflowPublish := Seq(
     ),
   ),
 )
+ThisBuild / githubWorkflowBuild := Seq(
+  WorkflowStep.Sbt(
+    List("scalafmtSbtCheck", "scalafmtCheckAll", "test"),
+    name = Some("Build project"),
+  ),
+)
 
 lazy val root = (project in file("."))
   .aggregate(`scalatest-otel-reporter`, `example-manual-configuration`)
