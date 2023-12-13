@@ -52,7 +52,7 @@ jobs:
         run: sbt '++ ${{ matrix.scala }}' githubWorkflowCheck
 
       - name: Build project
-        run: sbt '++ ${{ matrix.scala }}' test
+        run: sbt '++ ${{ matrix.scala }}' scalafmtSbtCheck scalafmtCheckAll test
 
       - name: Compress target directories
         run: tar cf targets.tar target scalatest-otel-reporter/target examples/manual-configuration/target project/target
