@@ -1,7 +1,7 @@
 import Dependencies._
 
 lazy val scala2_13              = "2.13.12"
-lazy val scala3                 = "3.3.1"
+lazy val scala3                 = "3.3.3"
 lazy val supportedScalaVersions = List(scala2_13, scala3)
 
 ThisBuild / scalaVersion       := scala3
