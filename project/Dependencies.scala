@@ -2,11 +2,11 @@ import sbt._
 
 object Dependencies {
   private val v = new {
-    val otel = "1.33.0"
+    val otel = "1.36.0"
   }
 
   // scalatest
-  val scalatest = "org.scalatest" %% "scalatest" % "3.2.17"
+  val scalatest = "org.scalatest" %% "scalatest" % "3.2.18"
 
   // OpenTelemetry
   val otelSdk           = "io.opentelemetry"         % "opentelemetry-sdk"                         % v.otel
