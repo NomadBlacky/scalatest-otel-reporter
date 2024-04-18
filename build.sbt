@@ -1,4 +1,4 @@
-import Dependencies._
+import Dependencies.*
 
 lazy val scala2_13              = "2.13.13"
 lazy val scala3                 = "3.3.3"
@@ -49,8 +49,14 @@ lazy val root = (project in file("."))
 lazy val `scalatest-otel-reporter` = (project in file("scalatest-otel-reporter"))
   .settings(
     libraryDependencies ++= Seq(
-      scalatest % Provided,
-      otelSdk   % Provided,
+      scalatest        % Provided,
+      otelSdk          % Provided,
+      wiremock         % Test,
+      otelExporterOTLP % Test,
+      otelSemConv      % Test,
+      otelProto        % Test,
+      logbackClassic   % Test,
+      julToSlf4j       % Test,
     ),
   )
 
