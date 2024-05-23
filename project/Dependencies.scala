@@ -2,7 +2,7 @@ import sbt.*
 
 object Dependencies {
   private val v = new {
-    val otel = "1.37.0"
+    val otel = "1.38.0"
   }
 
   // scalatest
@@ -16,10 +16,10 @@ object Dependencies {
   val otelProto         = "io.opentelemetry.proto"   % "opentelemetry-proto"                       % "1.1.0-alpha"
 
   // Testing utilities
-  val wiremock       = "org.wiremock"       % "wiremock"       % "3.4.2"
+  val wiremock       = "org.wiremock"       % "wiremock"       % "3.6.0"
   val testcontainers = "org.testcontainers" % "testcontainers" % "1.19.0"
 
   // Others
-  val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.5.3"
+  val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.5.6"
   val julToSlf4j     = "org.slf4j"      % "jul-to-slf4j"    % "2.0.13"
 }
