@@ -19,7 +19,7 @@ class JaegerTestReporter extends BaseOpenTelemetryTestReporter {
       OtlpGrpcSpanExporter.builder.setEndpoint("http://localhost:4317").setTimeout(30, TimeUnit.SECONDS).build
 
     val serviceNameResource =
-      Resource.create(Attributes.of(ResourceAttributes.SERVICE_NAME, "scalatest-otel-demo"))
+      Resource.create(Attributes.of(ResourceAttributes.SERVICE_NAME, "scalatest-otel-demo-manual"))
 
     // Set to process the spans by the Jaeger Exporter
     val tracerProvider = SdkTracerProvider.builder
