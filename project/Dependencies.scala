@@ -20,6 +20,6 @@ object Dependencies {
   val testcontainers = "org.testcontainers" % "testcontainers" % "1.19.0"
 
   // Others
-  val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.5.3"
+  val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.5.6"
   val julToSlf4j     = "org.slf4j"      % "jul-to-slf4j"    % "2.0.12"
 }
