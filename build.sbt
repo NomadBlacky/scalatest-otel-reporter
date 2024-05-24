@@ -35,7 +35,7 @@ ThisBuild / githubWorkflowPublish := Seq(
 )
 ThisBuild / githubWorkflowBuild := Seq(
   WorkflowStep.Sbt(
-    List("scalafmtSbtCheck", "scalafmtCheckAll", "test"),
+    List("scalafmtSbtCheck", "scalafmtCheckAll", "Test/compile", "scalatest-otel-reporter/test"),
     name = Some("Build project"),
   ),
 )
