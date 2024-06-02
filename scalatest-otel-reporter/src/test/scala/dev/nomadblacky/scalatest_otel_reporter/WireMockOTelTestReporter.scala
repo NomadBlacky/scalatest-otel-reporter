@@ -11,12 +11,12 @@ import io.opentelemetry.semconv.ResourceAttributes
 
 import java.util.concurrent.TimeUnit
 
-class WireMockOTelTestReporter(mockServer: MockServer) extends BaseOpenTelemetryTestReporter {
+class WireMockOTelTestReporter(host: String, port: Int) extends OpenTelemetryTestReporter {
   def otel: OpenTelemetry = {
     // Export traces to the WireMock server over OTLP
     val wireMockOtlpExporter =
       OtlpHttpSpanExporter.builder
-        .setEndpoint(s"http://${mockServer.host}:${mockServer.port}")
+        .setEndpoint(s"http://$host:$port")
         .setTimeout(30, TimeUnit.SECONDS)
         .build
 
