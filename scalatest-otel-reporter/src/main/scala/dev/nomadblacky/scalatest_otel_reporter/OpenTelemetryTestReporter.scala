@@ -1,7 +1,7 @@
 package dev.nomadblacky.scalatest_otel_reporter
 
+import io.opentelemetry.api.OpenTelemetry
 import io.opentelemetry.api.trace.{Span, StatusCode}
-import io.opentelemetry.api.{GlobalOpenTelemetry, OpenTelemetry}
 import io.opentelemetry.context.Context
 import org.scalatest.Reporter
 import org.scalatest.events._
@@ -9,11 +9,11 @@ import org.scalatest.events._
 import java.util.concurrent.ConcurrentHashMap
 import java.util.logging.Logger
 
-trait BaseOpenTelemetryTestReporter extends Reporter {
+trait OpenTelemetryTestReporter extends Reporter {
   def otel: OpenTelemetry
 
   private val tracer = otel.getTracerProvider.get("scalatest")
-  private val logger = Logger.getLogger(classOf[BaseOpenTelemetryTestReporter].getName)
+  private val logger = Logger.getLogger(classOf[OpenTelemetryTestReporter].getName)
 
   // TODO: Extract spans to a container class
   private var testRootSpan: Span = _
@@ -142,8 +142,4 @@ trait BaseOpenTelemetryTestReporter extends Reporter {
       case _: NoteProvided       => ()
       case _: MarkupProvided     => ()
     }
-}
-
-class OpenTelemetryTestReporter extends BaseOpenTelemetryTestReporter {
-  def otel: OpenTelemetry = GlobalOpenTelemetry.get()
 }
