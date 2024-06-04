@@ -1,0 +1,37 @@
+commitish: main
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+autolabeler:
+  - label: 'feature'
+    title:
+      - '/^feat/i'
+  - label: 'fix'
+    title:
+      - '/^fix/i'
+  - label: 'docs'
+    title:
+      - '/^docs/i'
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feature'
+  - title: '🐛 Fixes'
+    labels:
+      - 'fix'
+  - title: '📚 Documents'
+    labels:
+      - 'docs'
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
+version-resolver:
+  minor:
+    labels:
+      - 'feature'
+  patch:
+    labels:
+      - 'fix'
+  default: patch
+template: |
+  ## Changes
+
+  $CHANGES
