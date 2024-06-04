@@ -1,6 +1,7 @@
 commitish: main
 name-template: 'v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
+prerelease-identifier: 'alpha'
 autolabeler:
   - label: 'feature'
     title:
