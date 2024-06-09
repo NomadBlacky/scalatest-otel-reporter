@@ -122,3 +122,7 @@ Open the Jaeger UI in your browser (http://localhost:16686/) and you will see th
 
 
 ![img.png](jaeger-trace.png)
+
+## Blogs
+
+- [テストでも Observability したいっ！ ScalaTest を OpenTelemetry で計装してみた (ScalaMatsuri 2024 Unconference)](https://cobalt-lupin-e48.notion.site/Observability-ScalaTest-OpenTelemetry-b2d3e69d75f146b1a26fe9199d51e3e9)
