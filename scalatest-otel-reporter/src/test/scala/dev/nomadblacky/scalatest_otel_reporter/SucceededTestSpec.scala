@@ -4,7 +4,7 @@ import io.opentelemetry.proto.trace.v1.Status
 import org.scalatest.Args
 import org.scalatest.funspec.AnyFunSpecLike
 
-class SimpleTestSpec extends UnitTestSuite with OTelMockServer {
+class SucceededTestSpec extends UnitTestSuite with OTelMockServer {
 
   test("SimpleTest") {
     class SimpleTests extends AnyFunSpecLike {

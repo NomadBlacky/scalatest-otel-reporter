@@ -10,6 +10,8 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.logging.Logger
 
 trait OpenTelemetryTestReporter extends Reporter {
+  import OpenTelemetryTestReporter._
+
   def otel: OpenTelemetry
 
   private val tracer = otel.getTracerProvider.get("scalatest")
@@ -27,8 +29,8 @@ trait OpenTelemetryTestReporter extends Reporter {
        */
       case starting: RunStarting =>
         logger.fine(s"RunStarting")
-        // TODO: Make possible to configure the root span name
-        testRootSpan = tracer.spanBuilder("UNIT_TEST").startSpan()
+        val rootSpanName = starting.configMap.getWithDefault(ConfigKeyRootSpanName, DefaultRootSpanName)
+        testRootSpan = tracer.spanBuilder(rootSpanName).startSpan()
 
       case completed: RunCompleted =>
         logger.fine(s"RunCompleted")
@@ -142,4 +144,9 @@ trait OpenTelemetryTestReporter extends Reporter {
       case _: NoteProvided       => ()
       case _: MarkupProvided     => ()
     }
+}
+
+object OpenTelemetryTestReporter {
+  val ConfigKeyRootSpanName = "scalatest-otel-reporter.root-span-name"
+  val DefaultRootSpanName   = "scalatest"
 }

@@ -1,8 +1,5 @@
 package dev.nomadblacky.scalatest_otel_reporter
 
-import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder
-import io.opentelemetry.proto.collector.trace.v1.ExportTraceServiceRequest
 import io.opentelemetry.proto.trace.v1.Status
 import org.scalatest.funsuite.AnyFunSuiteLike
 import org.scalatest.{Args, ParallelTestExecution}

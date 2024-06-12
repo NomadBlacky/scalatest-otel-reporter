@@ -123,6 +123,23 @@ Open the Jaeger UI in your browser (http://localhost:16686/) and you will see th
 
 ![img.png](jaeger-trace.png)
 
-## Blogs
+## Configuration
+
+You can configure the behavior of the reporter by [ScalaTest's config map](https://www.scalatest.org/user_guide/using_the_runner).
+
+```scala
+Test / testOptions += Tests.Argument(
+  TestFrameworks.ScalaTest,
+  "-C",
+  "example.JaegerTestReporter",
+  "-Dscalatest-otel-reporter.root-span-name=my-awesome-tests",
+)
+```
+
+| Key                                      | Description                | Default     |
+|------------------------------------------|----------------------------|-------------|
+| `scalatest-otel-reporter.root-span-name` | The name of the root span. | `scalatest` |
+
+## Posts
 
 - [テストでも Observability したいっ！ ScalaTest を OpenTelemetry で計装してみた (ScalaMatsuri 2024 Unconference)](https://cobalt-lupin-e48.notion.site/Observability-ScalaTest-OpenTelemetry-b2d3e69d75f146b1a26fe9199d51e3e9)
