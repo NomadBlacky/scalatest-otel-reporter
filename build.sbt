@@ -74,5 +74,6 @@ lazy val `example-manual-configuration` = (project in file("examples/manual-conf
       TestFrameworks.ScalaTest,
       "-C",
       "dev.nomadblacky.scalatest_otel_reporter.examples.JaegerTestReporter",
+      "-Dscalatest-otel-reporter.root-span-name=example-manual-configuration",
     ),
   )
