@@ -9,13 +9,16 @@ import org.scalatest.events._
 import java.util.concurrent.ConcurrentHashMap
 import java.util.logging.Logger
 
-trait OpenTelemetryTestReporter extends Reporter {
+trait OpenTelemetryTestReporter[A <: OpenTelemetry] extends Reporter {
   import OpenTelemetryTestReporter._
 
-  def otel: OpenTelemetry
+  def initOpenTelemetry: A
+  protected def shutdownOtel(): Unit
 
-  private val tracer = otel.getTracerProvider.get("scalatest")
-  private val logger = Logger.getLogger(classOf[OpenTelemetryTestReporter].getName)
+  protected lazy val otel: A = initOpenTelemetry
+
+  private lazy val tracer = otel.getTracerProvider.get("scalatest")
+  private lazy val logger = Logger.getLogger(classOf[OpenTelemetryTestReporter.type].getName)
 
   // TODO: Extract spans to a container class
   private var testRootSpan: Span = _
@@ -37,12 +40,14 @@ trait OpenTelemetryTestReporter extends Reporter {
         Option(testRootSpan).fold(throw new IllegalStateException("TestRootSpan not found")) { span =>
           span.end()
         }
+        shutdownOtel()
 
       case stopped: RunStopped =>
         logger.fine(s"RunStopped")
         Option(testRootSpan).fold(throw new IllegalStateException("TestRootSpan not found")) { span =>
           span.end()
         }
+        shutdownOtel()
 
       case aborted: RunAborted =>
         logger.fine(s"RunAborted")
@@ -52,6 +57,7 @@ trait OpenTelemetryTestReporter extends Reporter {
             .recordException(aborted.throwable.orNull)
             .end()
         }
+        shutdownOtel()
 
       /*
        * Suite events
