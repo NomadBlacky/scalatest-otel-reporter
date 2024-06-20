@@ -32,7 +32,7 @@ lazy val `my-project` = (project in file("my-project"))
       "io.opentelemetry"         % "opentelemetry-sdk"           % "1.38.0"       % Test,
       "io.opentelemetry"         % "opentelemetry-exporter-otlp" % "1.38.0"       % Test,
       "io.opentelemetry.semconv" % "opentelemetry-semconv"       % "1.21.0-alpha" % Test,
-      "dev.nomadblacky"         %% "scalatest-otel-reporter"     % "0.2.0-alpha"  % Test,
+      "dev.nomadblacky"         %% "scalatest-otel-reporter"     % "<version>"    % Test,
     ),
     // Add the reporter class
     Test / testOptions += Tests.Argument(
@@ -49,7 +49,7 @@ Below is an example of sending trace data to Jaeger in localhost.
 ```scala
 package example
 
-import dev.nomadblacky.scalatest_otel_reporter.OpenTelemetryTestReporter
+import dev.nomadblacky.scalatest_otel_reporter.OpenTelemetrySdkTestReporter
 import io.opentelemetry.api.OpenTelemetry
 import io.opentelemetry.api.common.Attributes
 import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter
@@ -62,8 +62,8 @@ import io.opentelemetry.semconv.ResourceAttributes
 import java.util.concurrent.TimeUnit
 
 // Mix-In OpenTelemetryTestReporter
-class JaegerTestReporter extends OpenTelemetryTestReporter {
-  def otel: OpenTelemetry = {
+class JaegerTestReporter extends OpenTelemetrySdkTestReporter {
+  def initOpenTelemetry: OpenTelemetrySdk = {
     // Direct trace data to Jaeger on localhost
     val jaegerOtlpExporter =
       OtlpGrpcSpanExporter.builder.setEndpoint("http://localhost:4317").setTimeout(30, TimeUnit.SECONDS).build

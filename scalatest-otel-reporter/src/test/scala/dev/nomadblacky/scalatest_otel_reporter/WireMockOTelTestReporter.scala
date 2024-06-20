@@ -1,6 +1,5 @@
 package dev.nomadblacky.scalatest_otel_reporter
 
-import io.opentelemetry.api.OpenTelemetry
 import io.opentelemetry.api.common.Attributes
 import io.opentelemetry.exporter.otlp.http.trace.OtlpHttpSpanExporter
 import io.opentelemetry.sdk.OpenTelemetrySdk
@@ -11,8 +10,8 @@ import io.opentelemetry.semconv.ResourceAttributes
 
 import java.util.concurrent.TimeUnit
 
-class WireMockOTelTestReporter(host: String, port: Int) extends OpenTelemetryTestReporter {
-  def otel: OpenTelemetry = {
+class WireMockOTelTestReporter(host: String, port: Int) extends OpenTelemetrySdkTestReporter {
+  def initOpenTelemetry: OpenTelemetrySdk = {
     // Export traces to the WireMock server over OTLP
     val wireMockOtlpExporter =
       OtlpHttpSpanExporter.builder

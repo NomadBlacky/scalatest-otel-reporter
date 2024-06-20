@@ -1,7 +1,6 @@
 package dev.nomadblacky.scalatest_otel_reporter.examples
 
-import dev.nomadblacky.scalatest_otel_reporter.OpenTelemetryTestReporter
-import io.opentelemetry.api.OpenTelemetry
+import dev.nomadblacky.scalatest_otel_reporter.OpenTelemetrySdkTestReporter
 import io.opentelemetry.api.common.Attributes
 import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter
 import io.opentelemetry.sdk.OpenTelemetrySdk
@@ -12,8 +11,8 @@ import io.opentelemetry.semconv.ResourceAttributes
 
 import java.util.concurrent.TimeUnit
 
-class JaegerTestReporter extends OpenTelemetryTestReporter {
-  def otel: OpenTelemetry = {
+class JaegerTestReporter extends OpenTelemetrySdkTestReporter {
+  def initOpenTelemetry: OpenTelemetrySdk = {
     // Export traces to Jaeger over OTLP
     val jaegerOtlpExporter =
       OtlpGrpcSpanExporter.builder.setEndpoint("http://localhost:4317").setTimeout(30, TimeUnit.SECONDS).build
