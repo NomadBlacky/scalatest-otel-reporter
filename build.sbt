@@ -49,8 +49,9 @@ lazy val root = (project in file("."))
 lazy val `scalatest-otel-reporter` = (project in file("scalatest-otel-reporter"))
   .settings(
     libraryDependencies ++= Seq(
-      scalatest        % Provided,
+      scalatestCore    % Provided,
       otelSdk          % Provided,
+      scalatest        % Test,
       wiremock         % Test,
       otelExporterOTLP % Test,
       otelSemConv      % Test,
