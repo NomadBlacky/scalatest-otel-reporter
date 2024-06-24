@@ -18,7 +18,7 @@ object Dependencies {
   val otelProto         = "io.opentelemetry.proto"   % "opentelemetry-proto"                       % "1.1.0-alpha"
 
   // Testing utilities
-  val wiremock       = "org.wiremock"       % "wiremock"       % "3.6.0"
+  val wiremock       = "org.wiremock"       % "wiremock"       % "3.7.0"
   val testcontainers = "org.testcontainers" % "testcontainers" % "1.19.0"
 
   // Others
