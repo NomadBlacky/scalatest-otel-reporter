@@ -20,10 +20,9 @@ trait OpenTelemetryTestReporter[A <: OpenTelemetry] extends Reporter {
   private lazy val tracer = otel.getTracerProvider.get("scalatest")
   private lazy val logger = Logger.getLogger(classOf[OpenTelemetryTestReporter.type].getName)
 
-  // TODO: Extract spans to a container class
-  private var testRootSpan: Span = _
-  private val suitesMap          = TrieMap.empty[String, Span]
-  private val testsMap           = TrieMap.empty[String, Span]
+  private var testRootSpan: Option[Span] = None
+  private val suitesMap                  = TrieMap.empty[String, Span]
+  private val testsMap                   = TrieMap.empty[String, Span]
 
   def apply(event: Event): Unit =
     event match {
@@ -33,25 +32,25 @@ trait OpenTelemetryTestReporter[A <: OpenTelemetry] extends Reporter {
       case starting: RunStarting =>
         logger.fine(s"RunStarting")
         val rootSpanName = starting.configMap.getWithDefault(ConfigKeyRootSpanName, DefaultRootSpanName)
-        testRootSpan = tracer.spanBuilder(rootSpanName).startSpan()
+        testRootSpan = Some(tracer.spanBuilder(rootSpanName).startSpan())
 
       case completed: RunCompleted =>
         logger.fine(s"RunCompleted")
-        Option(testRootSpan).fold(throw new IllegalStateException("TestRootSpan not found")) { span =>
+        testRootSpan.fold(throw new IllegalStateException("TestRootSpan not found")) { span =>
           span.end()
         }
         shutdownOtel()
 
       case stopped: RunStopped =>
         logger.fine(s"RunStopped")
-        Option(testRootSpan).fold(throw new IllegalStateException("TestRootSpan not found")) { span =>
+        testRootSpan.fold(throw new IllegalStateException("TestRootSpan not found")) { span =>
           span.end()
         }
         shutdownOtel()
 
       case aborted: RunAborted =>
         logger.fine(s"RunAborted")
-        Option(testRootSpan).fold(throw new IllegalStateException("TestRootSpan not found")) { span =>
+        testRootSpan.fold(throw new IllegalStateException("TestRootSpan not found")) { span =>
           span
             .setStatus(StatusCode.ERROR, aborted.message)
             .recordException(aborted.throwable.orNull)
@@ -64,9 +63,11 @@ trait OpenTelemetryTestReporter[A <: OpenTelemetry] extends Reporter {
        */
       case starting: SuiteStarting =>
         logger.fine(s"SuiteStarting: ${starting.suiteName}")
-        val suiteSpan =
-          tracer.spanBuilder(starting.suiteName).setParent(Context.current().`with`(testRootSpan)).startSpan()
-        suitesMap.put(starting.suiteId, suiteSpan)
+        testRootSpan.fold(throw new IllegalStateException("TestRootSpan not found")) { rootSpan =>
+          val suiteSpan =
+            tracer.spanBuilder(starting.suiteName).setParent(Context.current().`with`(rootSpan)).startSpan()
+          suitesMap.put(starting.suiteId, suiteSpan)
+        }
 
       case completed: SuiteCompleted =>
         logger.fine(s"SuiteCompleted: ${completed.suiteName}")
