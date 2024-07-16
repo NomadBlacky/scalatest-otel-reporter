@@ -6,6 +6,8 @@ import io.opentelemetry.context.Context
 import org.scalatest.Reporter
 import org.scalatest.events._
 
+import java.util.Collections
+import java.util.concurrent.ConcurrentHashMap
 import java.util.logging.Logger
 import scala.collection.concurrent.TrieMap
 
@@ -24,6 +26,9 @@ trait OpenTelemetryTestReporter[A <: OpenTelemetry] extends Reporter {
   private val suitesMap                  = TrieMap.empty[String, Span]
   private val testsMap                   = TrieMap.empty[String, Span]
 
+  private val failedSuiteIds =
+    Collections.newSetFromMap[String](new ConcurrentHashMap[String, java.lang.Boolean])
+
   def apply(event: Event): Unit =
     event match {
       /*
@@ -37,7 +42,10 @@ trait OpenTelemetryTestReporter[A <: OpenTelemetry] extends Reporter {
       case completed: RunCompleted =>
         logger.fine(s"RunCompleted")
         testRootSpan.fold(throw new IllegalStateException("TestRootSpan not found")) { span =>
-          span.end()
+          val statusCode = if (failedSuiteIds.isEmpty) StatusCode.OK else StatusCode.ERROR
+          span
+            .setStatus(statusCode)
+            .end()
         }
         shutdownOtel()
 
@@ -74,8 +82,9 @@ trait OpenTelemetryTestReporter[A <: OpenTelemetry] extends Reporter {
         suitesMap
           .remove(completed.suiteId)
           .fold(throw new IllegalStateException(s"Suite not found: $completed")) { span =>
+            val statusCode = if (failedSuiteIds.contains(completed.suiteId)) StatusCode.ERROR else StatusCode.OK
             span
-              .setStatus(StatusCode.OK)
+              .setStatus(statusCode)
               .end()
           }
 
@@ -115,6 +124,7 @@ trait OpenTelemetryTestReporter[A <: OpenTelemetry] extends Reporter {
         testsMap
           .remove(failed.testName)
           .fold(throw new IllegalStateException(s"Test not found: ${failed.testName}")) { span =>
+            failedSuiteIds.add(failed.suiteId)
             span
               .setStatus(StatusCode.ERROR, failed.message)
               .recordException(failed.throwable.orNull)
